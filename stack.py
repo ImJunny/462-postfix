@@ -7,27 +7,20 @@ class Stack:
     return len(self.items)==0
   
   def top(self):
-    if (not self.isEmpty()): return self.items[-1]
+    if not self.isEmpty(): return self.items[-1]
     else: print("no items in stack")
 
   def pop(self):
-    if (not self.isEmpty()): return self.items.pop()
+    if not self.isEmpty(): return self.items.pop()
     else: print("no items to pop")
 
-  def append(self,x): self.items.append(x)
+  def push(self,x): self.items.append(x)
   def size(self): return len(self.items)
-
-  def printStack(self):
-    for y in self.items:
-      print(y,end="")
-    print()
 
 #GET PRECEDENCE METHOD
 def prec(x):
-  if (x=="*" or x=="/"):
-    return 1
-  if (x=="+" or x=="-"):
-    return 0
+  if (x=="*" or x=="/"): return 1
+  if (x=="+" or x=="-"): return 0
   return -1
 
 #INFIX TO POSTFIX METHOD
@@ -36,23 +29,23 @@ def infixToPostfix(input):
   postfix = Stack()
   #for each symbol in input, place accordingly
   for x in input:
-    if (x.isdigit()): postfix.append(x)
+    if (x.isdigit()): postfix.push(x)
 
-    elif (operators.size()==0 or x=="("): operators.append(x)
+    elif (operators.size()==0 or x=="("): operators.push(x)
 
     elif (x==")"):
       while (operators.top()!="("):
-        postfix.append(operators.pop())
+        postfix.push(operators.pop())
       operators.pop()
-    elif (prec(x) > prec(operators.top())): operators.append(x)
+    elif (prec(x) > prec(operators.top())): operators.push(x)
     else:
       while(operators.size() and prec(x) <= prec(operators.top())):
-        postfix.append(operators.pop())
-      operators.append(x)
+        postfix.push(operators.pop())
+      operators.push(x)
 
   #pop remaining operators from operators to expression
   while (operators.size()):
-    postfix.append(operators.pop())
+    postfix.push(operators.pop())
 
   return postfix
 
@@ -63,12 +56,12 @@ def calculatePostfix(postfixStack):
 
   #reverse stack to use top/pop accordingly
   while(postfixStack.size()>0):
-    revPostfixStack.append(postfixStack.pop())
+    revPostfixStack.push(postfixStack.pop())
   
   while(revPostfixStack.size()>0):
     #if operand, append to operand stack
     if (revPostfixStack.top().isdigit()):
-      operands.append(revPostfixStack.pop())
+      operands.push(revPostfixStack.pop())
     #if operator, update operand stack accordingly
     else:
       newNum=0
@@ -80,7 +73,7 @@ def calculatePostfix(postfixStack):
       else: newNum = num2-num1
       revPostfixStack.pop()  
 
-      operands.append(newNum)
+      operands.push(newNum)
   #return operand stack
   return operands
 
