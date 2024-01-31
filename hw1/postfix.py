@@ -1,3 +1,6 @@
+#import copy only to print out postfix through deep copy
+import copy
+
 #STACK CLASS
 class Stack:
   def __init__(self):
@@ -16,6 +19,14 @@ class Stack:
 
   def push(self,x): self.items.append(x)
   def size(self): return len(self.items)
+
+  def getPostfix(self):
+    temp = copy.deepcopy(self)
+    revPostfixStack = Stack()
+    while temp.size()>0: revPostfixStack.push(temp.pop())
+    result=""
+    while revPostfixStack.size()>0: result+=revPostfixStack.pop()
+    return result
 
 #GET PRECEDENCE METHOD
 def prec(x):
@@ -44,9 +55,7 @@ def infixToPostfix(input):
       operators.push(x)
 
   #pop remaining operators from operators to expression
-  while (operators.size()):
-    postfix.push(operators.pop())
-
+  while (operators.size()): postfix.push(operators.pop())
   return postfix
 
 #CALCULATE POSTFIX METHOD
@@ -81,11 +90,15 @@ def calculatePostfix(postfixStack):
 def main():
   #infix goes here
   input = "8*5*2/(1+5-3*2*(3/2)*5)"
-  postfixStack = infixToPostfix(input)
-  calculationStack = calculatePostfix(postfixStack)
+  print("infix is\t\t", input)
 
+  #get postfix
+  postfixStack = infixToPostfix(input)
+  print("postfix is\t",postfixStack.getPostfix())
+  
   #print answer
-  print("answer is", calculationStack.top())
+  calculationStack = calculatePostfix(postfixStack)
+  print("answer is\t\t", calculationStack.top())
 
 if __name__=="__main__":
   main()
